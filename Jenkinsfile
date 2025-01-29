@@ -1,21 +1,18 @@
 pipeline {
-    environment {
-        QODANA_TOKEN=credentials('qodana-token')
-        QODANA_ENDPOINT='https://qodana.cloud'
-    }
     agent {
         docker {
-            args '''
-              -v "${WORKSPACE}":/data/project
-              --entrypoint=""
-              '''
             image 'jetbrains/qodana-python:2024.3'
+            args '--entrypoint="" -v ${WORKSPACE}:/data/project'
         }
     }
+    environment {
+        QODANA_TOKEN = credentials('qodana-token')
+        QODANA_ENDPOINT = 'https://qodana.cloud'
+    }
     stages {
-        stage('Qodana') {
+        stage('Qodana Run') {
             steps {
-                sh '''qodana'''
+                sh 'qodana'
             }
         }
     }
